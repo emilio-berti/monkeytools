@@ -67,29 +67,71 @@
 <p>You can install the development version of monkeytools from <a href="https://github.com/emilio-berti/monkeytools" class="external-link">GitHub</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"emilio-berti/monkeytools"</span><span class="op">)</span></code></pre></div>
-<p>monkeytools package is not released on CRAN.</p>
+<p>monkeytools is not released on CRAN.</p>
 </div>
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
-<p>This is a basic example which shows you how to solve a common problem:</p>
+<div class="section level3">
+<h3 id="simple-assessments-of-species-distribution-models">Simple assessments of species distribution models.<a class="anchor" aria-label="anchor" href="#simple-assessments-of-species-distribution-models"></a>
+</h3>
+<p>Let’s first generate some data for a virtual species that never goes above 130 meters.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">monkeytools</span><span class="op">)</span>
-<span class="co">## basic example code</span></code></pre></div>
-<p>What is special about using <code>README.Rmd</code> instead of just <code>README.md</code>? You can include R chunks like so:</p>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/raster" class="external-link">raster</a></span><span class="op">)</span>
+<span class="co">#&gt; Loading required package: sp</span>
+
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">volcano</span><span class="op">)</span>
+<span class="va">r</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/raster/man/raster.html" class="external-link">raster</a></span><span class="op">(</span><span class="va">volcano</span><span class="op">)</span>
+<span class="va">xy</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/raster/man/xyFromCell.html" class="external-link">xyFromCell</a></span><span class="op">(</span><span class="va">r</span>, <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/pkg/raster/man/ncell.html" class="external-link">ncell</a></span><span class="op">(</span><span class="va">r</span><span class="op">)</span>, <span class="fl">100</span><span class="op">)</span><span class="op">)</span>
+<span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/raster/man/extract.html" class="external-link">extract</a></span><span class="op">(</span><span class="va">r</span> ,<span class="va">xy</span><span class="op">)</span> <span class="co">#elevation</span>
+<span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">x</span> <span class="op">&lt;</span> <span class="fl">130</span>, <span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span> <span class="co">#real presence/absence - doesn't like heights</span>
+<span class="va">occ</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">xy</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span>, y <span class="op">=</span> <span class="va">xy</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span>, p <span class="op">=</span> <span class="va">p</span><span class="op">)</span> <span class="co">#combined in a dataframe</span>
+<span class="fu"><a href="https://rdrr.io/pkg/raster/man/headtail.html" class="external-link">head</a></span><span class="op">(</span><span class="va">occ</span><span class="op">)</span>
+<span class="co">#&gt;           x           y p</span>
+<span class="co">#&gt; 1 0.8114754 0.005747126 1</span>
+<span class="co">#&gt; 2 0.9754098 0.385057471 1</span>
+<span class="co">#&gt; 3 0.3360656 0.212643678 0</span>
+<span class="co">#&gt; 4 0.1721311 0.385057471 1</span>
+<span class="co">#&gt; 5 0.5655738 0.810344828 0</span>
+<span class="co">#&gt; 6 0.2377049 0.201149425 0</span>
+
+<span class="co"># sdm potential output</span>
+<span class="va">sdm</span> <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">/</span> <span class="va">r</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/raster/man/ncell.html" class="external-link">ncell</a></span><span class="op">(</span><span class="va">r</span><span class="op">)</span>, <span class="fl">0</span>, <span class="fl">.001</span><span class="op">)</span> <span class="co">#sdm predictions</span>
+<span class="va">sdm</span> <span class="op">&lt;-</span> <span class="va">sdm</span> <span class="op">-</span> <span class="va">sdm</span><span class="op">@</span><span class="va">data</span><span class="op">@</span><span class="va">min</span>
+<span class="va">sdm</span> <span class="op">&lt;-</span> <span class="va">sdm</span> <span class="op">/</span> <span class="va">sdm</span><span class="op">@</span><span class="va">data</span><span class="op">@</span><span class="va">max</span></code></pre></div>
+<p>A very useful summary table is the <em>confusion matrix</em>. The confusion table calculates the fraction of correctly predicted occurrences based on observed data. For this, SDM output needs to be binarized.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">cars</span><span class="op">)</span>
-<span class="co">#&gt;      speed           dist       </span>
-<span class="co">#&gt;  Min.   : 4.0   Min.   :  2.00  </span>
-<span class="co">#&gt;  1st Qu.:12.0   1st Qu.: 26.00  </span>
-<span class="co">#&gt;  Median :15.0   Median : 36.00  </span>
-<span class="co">#&gt;  Mean   :15.4   Mean   : 42.98  </span>
-<span class="co">#&gt;  3rd Qu.:19.0   3rd Qu.: 56.00  </span>
-<span class="co">#&gt;  Max.   :25.0   Max.   :120.00</span></code></pre></div>
-<p>You’ll still need to render <code>README.Rmd</code> regularly, to keep <code>README.md</code> up-to-date. <code>devtools::build_readme()</code> is handy for this. You could also use GitHub Actions to re-render <code>README.Rmd</code> every time you push. An example workflow can be found here: <a href="https://github.com/r-lib/actions/tree/master/examples" class="external-link uri">https://github.com/r-lib/actions/tree/master/examples</a>.</p>
-<p>You can also embed plots, for example:</p>
-<p><img src="reference/figures/README-pressure-1.png" width="100%"></p>
-<p>In that case, don’t forget to commit and push the resulting figure files, so they display on GitHub and CRAN.</p>
+<code class="sourceCode R"><span class="va">sdm_bin</span> <span class="op">&lt;-</span> <span class="va">sdm</span>
+<span class="va">sdm_bin</span><span class="op">[</span><span class="va">sdm</span> <span class="op">&lt;</span> <span class="fl">.5</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">0</span>
+<span class="va">sdm_bin</span><span class="op">[</span><span class="va">sdm</span> <span class="op">&gt;=</span> <span class="fl">.5</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">1</span>
+<span class="fu"><a href="reference/confusion.html">confusion</a></span><span class="op">(</span><span class="va">sdm_bin</span>, <span class="va">occ</span><span class="op">)</span>
+<span class="co">#&gt; $confusion.table</span>
+<span class="co">#&gt;               obs.presence obs.absence</span>
+<span class="co">#&gt; pred.presence           43          13</span>
+<span class="co">#&gt; pred.absence             4          40</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $specificity</span>
+<span class="co">#&gt; [1] 0.7678571</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $sensitivity</span>
+<span class="co">#&gt; [1] 0.9090909</span></code></pre></div>
+<p>The confusion matrix is used in the famous <strong>AUROC</strong> curve, which shows how much some statistics extracted from the confusion matrix change for different binarization thresholds. The area under the AUROC curve (<strong>AUC</strong>) measures how well the SDM fits data better than random (dashed line). There are other (and better) summary statistics for goodness-of-fit of SDMs, but AUC remains one the most adopted.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">null</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/AUROC.html">AUROC</a></span><span class="op">(</span><span class="va">sdm</span>, <span class="va">occ</span>, th <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, length.out <span class="op">=</span> <span class="fl">50</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p><img src="reference/figures/README-auroc-1.png" width="100%"></p>
+<p>And for a very bad SDM:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/raster/man/getValues.html" class="external-link">values</a></span><span class="op">(</span><span class="va">sdm</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/raster/man/ncell.html" class="external-link">ncell</a></span><span class="op">(</span><span class="va">sdm</span><span class="op">)</span><span class="op">)</span>
+<span class="va">null</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/AUROC.html">AUROC</a></span><span class="op">(</span><span class="va">sdm</span>, <span class="va">occ</span>, th <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, length.out <span class="op">=</span> <span class="fl">50</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p><img src="reference/figures/README-bad%20auroc-1.png" width="100%"></p>
+<!-- You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this. You could also use GitHub Actions to re-render `README.Rmd` every time you push. An example workflow can be found here: <https://github.com/r-lib/actions/tree/master/examples>. -->
+<!-- You can also embed plots, for example: -->
+<!-- ```{r pressure, echo = FALSE} -->
+<!-- plot(pressure) -->
+<!-- ``` -->
+<!-- In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN. -->
+</div>
 </div>
 </div>
   </div>
