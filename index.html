@@ -88,13 +88,13 @@
 <span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">x</span> <span class="op">&lt;</span> <span class="fl">130</span>, <span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span> <span class="co">#real presence/absence - doesn't like heights</span>
 <span class="va">occ</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">xy</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span>, y <span class="op">=</span> <span class="va">xy</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span>, p <span class="op">=</span> <span class="va">p</span><span class="op">)</span> <span class="co">#combined in a dataframe</span>
 <span class="fu"><a href="https://rdrr.io/pkg/raster/man/headtail.html" class="external-link">head</a></span><span class="op">(</span><span class="va">occ</span><span class="op">)</span>
-<span class="co">#&gt;           x           y p</span>
-<span class="co">#&gt; 1 0.8114754 0.005747126 1</span>
-<span class="co">#&gt; 2 0.9754098 0.385057471 1</span>
-<span class="co">#&gt; 3 0.3360656 0.212643678 0</span>
-<span class="co">#&gt; 4 0.1721311 0.385057471 1</span>
-<span class="co">#&gt; 5 0.5655738 0.810344828 0</span>
-<span class="co">#&gt; 6 0.2377049 0.201149425 0</span>
+<span class="co">#&gt;            x         y p</span>
+<span class="co">#&gt; 1 0.76229508 0.3620690 1</span>
+<span class="co">#&gt; 2 0.81147541 0.8103448 0</span>
+<span class="co">#&gt; 3 0.92622951 0.1206897 1</span>
+<span class="co">#&gt; 4 0.36885246 0.2471264 0</span>
+<span class="co">#&gt; 5 0.68032787 0.2241379 1</span>
+<span class="co">#&gt; 6 0.04098361 0.4195402 1</span>
 
 <span class="co"># sdm potential output</span>
 <span class="va">sdm</span> <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">/</span> <span class="va">r</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/raster/man/ncell.html" class="external-link">ncell</a></span><span class="op">(</span><span class="va">r</span><span class="op">)</span>, <span class="fl">0</span>, <span class="fl">.001</span><span class="op">)</span> <span class="co">#sdm predictions</span>
@@ -108,19 +108,19 @@
 <span class="fu"><a href="reference/confusion.html">confusion</a></span><span class="op">(</span><span class="va">sdm_bin</span>, <span class="va">occ</span><span class="op">)</span>
 <span class="co">#&gt; $confusion.table</span>
 <span class="co">#&gt;               obs.presence obs.absence</span>
-<span class="co">#&gt; pred.presence           43          13</span>
-<span class="co">#&gt; pred.absence             4          40</span>
+<span class="co">#&gt; pred.presence           48           8</span>
+<span class="co">#&gt; pred.absence             6          38</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $specificity</span>
-<span class="co">#&gt; [1] 0.7678571</span>
+<span class="co">#&gt; [1] 0.8571429</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $sensitivity</span>
-<span class="co">#&gt; [1] 0.9090909</span></code></pre></div>
+<span class="co">#&gt; [1] 0.8636364</span></code></pre></div>
 <p>The confusion matrix is used in the famous <strong>AUROC</strong> curve, which shows how much some statistics extracted from the confusion matrix change for different binarization thresholds. The area under the AUROC curve (<strong>AUC</strong>) measures how well the SDM fits data better than random (dashed line). There are other (and better) summary statistics for goodness-of-fit of SDMs, but AUC remains one the most adopted.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">null</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/AUROC.html">AUROC</a></span><span class="op">(</span><span class="va">sdm</span>, <span class="va">occ</span>, th <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, length.out <span class="op">=</span> <span class="fl">50</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><img src="reference/figures/README-auroc-1.png" width="100%"></p>
-<p>And for a very bad SDM:</p>
+<p>And for a very bad SDM the two lines largely overlap.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/raster/man/getValues.html" class="external-link">values</a></span><span class="op">(</span><span class="va">sdm</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/raster/man/ncell.html" class="external-link">ncell</a></span><span class="op">(</span><span class="va">sdm</span><span class="op">)</span><span class="op">)</span>
 <span class="va">null</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/AUROC.html">AUROC</a></span><span class="op">(</span><span class="va">sdm</span>, <span class="va">occ</span>, th <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, length.out <span class="op">=</span> <span class="fl">50</span><span class="op">)</span><span class="op">)</span></code></pre></div>
