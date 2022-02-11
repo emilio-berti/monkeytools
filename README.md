@@ -41,13 +41,13 @@ x <- extract(r ,xy) #elevation
 p <- ifelse(x < 130, 1, 0) #real presence/absence - doesn't like heights
 occ <- data.frame(x = xy[, 1], y = xy[, 2], p = p) #combined in a dataframe
 head(occ)
-#>           x           y p
-#> 1 0.8114754 0.005747126 1
-#> 2 0.9754098 0.385057471 1
-#> 3 0.3360656 0.212643678 0
-#> 4 0.1721311 0.385057471 1
-#> 5 0.5655738 0.810344828 0
-#> 6 0.2377049 0.201149425 0
+#>            x         y p
+#> 1 0.76229508 0.3620690 1
+#> 2 0.81147541 0.8103448 0
+#> 3 0.92622951 0.1206897 1
+#> 4 0.36885246 0.2471264 0
+#> 5 0.68032787 0.2241379 1
+#> 6 0.04098361 0.4195402 1
 
 # sdm potential output
 sdm <- 1 / r + rnorm(ncell(r), 0, .001) #sdm predictions
@@ -66,14 +66,14 @@ sdm_bin[sdm >= .5] <- 1
 confusion(sdm_bin, occ)
 #> $confusion.table
 #>               obs.presence obs.absence
-#> pred.presence           43          13
-#> pred.absence             4          40
+#> pred.presence           48           8
+#> pred.absence             6          38
 #> 
 #> $specificity
-#> [1] 0.7678571
+#> [1] 0.8571429
 #> 
 #> $sensitivity
-#> [1] 0.9090909
+#> [1] 0.8636364
 ```
 
 The confusion matrix is used in the famous **AUROC** curve, which shows
@@ -89,7 +89,7 @@ null <- AUROC(sdm, occ, th = seq(0, 1, length.out = 50))
 
 <img src="man/figures/README-auroc-1.png" width="100%" />
 
-And for a very bad SDM:
+And for a very bad SDM the two lines largely overlap.
 
 ``` r
 values(sdm) <- rnorm(ncell(sdm))

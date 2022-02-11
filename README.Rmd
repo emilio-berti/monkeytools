@@ -70,7 +70,7 @@ The confusion matrix is used in the famous **AUROC** curve, which shows how much
 null <- AUROC(sdm, occ, th = seq(0, 1, length.out = 50))
 ```
 
-And for a very bad SDM:
+And for a very bad SDM the two lines largely overlap.
 
 ```{r bad auroc}
 values(sdm) <- rnorm(ncell(sdm))
