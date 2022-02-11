@@ -12,6 +12,8 @@ AUROC(r, df, th = 10^seq(-3, 0, length.out = 25), plot = TRUE)
 \item{df}{data.frame with locations (long, lat) and observed value (0, 1).}
 
 \item{th}{threshold to apply to binarize suitability.}
+
+\item{plot}{TRUE/FALSE, do you want to plot the AUROC curve?}
 }
 \description{
 Get AUROC

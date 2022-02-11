@@ -22,11 +22,10 @@ gridPolygon <- function(mat, proj4, ID) {
 
 #' @title Create spatial grid
 #'
-#' @param x RasterLayer.
+#' @param r RasterLayer.
 #' @param split.hor integer, number of horizontal splits.
 #' @param split.vert integer, number of vertical splits.
-#' @param proj4 string, proj4string of the original raster.
-gridRaster <- function(x, split.hor, split.vert) {
+gridRaster <- function(r, split.hor, split.vert) {
   # get proj4string of the CRS
   proj4 <- sp::proj4string(x)
   # get corner points

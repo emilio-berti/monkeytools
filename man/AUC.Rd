@@ -7,7 +7,9 @@
 AUC(x, y)
 }
 \arguments{
-\item{th}{threshold to apply to binarize suitability.}
+\item{x}{to add.}
+
+\item{y}{to add.}
 }
 \description{
 Get AUC

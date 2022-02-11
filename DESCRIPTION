@@ -5,11 +5,15 @@ Date: 08-02-2022
 Authors@R: 
     person("Emilio", "Berti", , "emilio.berti.academia@gmail.com", role = c("aut", "cre"))
 Description: Bunch of functions and wrappers to make the life of programming monkeys easier.
-License: `use_mit_license()`
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
+Imports:
+  sp,
+  raster,
+  graphics
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3

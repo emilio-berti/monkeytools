@@ -4,16 +4,14 @@
 \alias{gridRaster}
 \title{Create spatial grid}
 \usage{
-gridRaster(x, split.hor, split.vert)
+gridRaster(r, split.hor, split.vert)
 }
 \arguments{
-\item{x}{RasterLayer.}
+\item{r}{RasterLayer.}
 
 \item{split.hor}{integer, number of horizontal splits.}
 
 \item{split.vert}{integer, number of vertical splits.}
-
-\item{proj4}{string, proj4string of the original raster.}
 }
 \description{
 Create spatial grid

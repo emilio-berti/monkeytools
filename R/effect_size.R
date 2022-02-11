@@ -96,8 +96,8 @@ pooled <- function(x, y) {
   }
   n.x <- length(x)
   n.y <- length(y)
-  var.x <- var(x)
-  var.y <- var(y)
+  var.x <- stats::var(x)
+  var.y <- stats::var(y)
   ans <- ((n.x - 1) * var.x + (n.y - 1) * var.y) / (n.x + n.y + 2)
   ans <- sqrt(ans)
   return(ans)
