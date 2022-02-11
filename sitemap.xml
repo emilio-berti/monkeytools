@@ -4,6 +4,12 @@
     <loc>/404.html</loc>
   </url>
   <url>
+    <loc>/LICENSE-text.html</loc>
+  </url>
+  <url>
+    <loc>/LICENSE.html</loc>
+  </url>
+  <url>
     <loc>/authors.html</loc>
   </url>
   <url>
@@ -26,9 +32,6 @@
   </url>
   <url>
     <loc>/reference/gridRaster.html</loc>
-  </url>
-  <url>
-    <loc>/reference/hello.html</loc>
   </url>
   <url>
     <loc>/reference/index.html</loc>
